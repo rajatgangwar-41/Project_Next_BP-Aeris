@@ -1,3 +1,5 @@
+import axios from "axios";
+import { waitUntil } from "@vercel/functions";
 import { auth } from "@clerk/nextjs/server";
 import { type NextRequest, NextResponse } from "next/server";
 import { getAccountDetails, getAurinkoToken } from "@/lib/aurinko";
@@ -45,6 +47,20 @@ export const GET = async (req: NextRequest) => {
       name: accountDetails.name,
     },
   });
+
+  waitUntil(
+    axios
+      .post(`${process.env.NEXT_PUBLIC_URL}/api/initial-sync`, {
+        accountId: token.accountId.toString(),
+        userId,
+      })
+      .then((res) => {
+        console.log("Then response: ", res.data);
+      })
+      .catch((err) => {
+        console.log("Catch error: ", err.response.data);
+      }),
+  );
 
   return NextResponse.redirect(new URL("/mail", req.url));
 };
