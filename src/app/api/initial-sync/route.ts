@@ -1,7 +1,6 @@
 import Account from "@/lib/account";
-// import { syncEmailsToDatabase } from "@/lib/sync-to-db";
+import { syncEmailsToDatabase } from "@/lib/sync-to-db";
 import { db } from "@/server/db";
-import { auth } from "@clerk/nextjs/server";
 import { type NextRequest, NextResponse } from "next/server";
 
 export const maxDuration = 300;
@@ -30,16 +29,18 @@ export const POST = async (req: NextRequest) => {
 
   const { deltaToken, emails } = response;
 
-  // await syncEmailsToDatabase(emails, accountId);
+  await syncEmailsToDatabase(emails, accountId);
 
-  // await db.account.update({
-  //   where: {
-  //     accessToken: dbAccount.accessToken,
-  //   },
-  //   data: {
-  //     nextDeltaToken: deltaToken,
-  //   },
-  // });
-  // console.log("sync complete", deltaToken);
+  await db.account.update({
+    where: {
+      accessToken: dbAccount.accessToken,
+    },
+    data: {
+      nextDeltaToken: deltaToken,
+    },
+  });
+
+  console.log("sync complete", deltaToken);
+
   return NextResponse.json({ success: true }, { status: 200 });
 };
