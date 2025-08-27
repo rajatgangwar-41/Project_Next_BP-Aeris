@@ -1,10 +1,19 @@
 import React from "react";
+import dynamic from "next/dynamic";
+// import { Mail } from "./mail";
+
+const Mail = dynamic(() => import("./mail").then((mod) => mod.Mail), {
+  //To Be Done, we need to make it false
+  ssr: true,
+});
 
 const MailPage = () => {
   return (
-    <div className="flex h-screen items-center justify-center text-4xl">
-      Mail Page
-    </div>
+    <Mail
+      defaultLayout={[20, 32, 48]}
+      defaultCollapsed={false}
+      navCollapsedSize={4}
+    />
   );
 };
 

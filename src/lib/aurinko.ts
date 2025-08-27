@@ -7,7 +7,9 @@ interface AurinkoAuth {
   serviceType: "Google" | "Office365";
 }
 
-export const getAurinkoAuth = async ({ serviceType }: AurinkoAuth) => {
+export const getAurinkoAuthorizationUrl = async ({
+  serviceType,
+}: AurinkoAuth) => {
   const { userId } = await auth();
   if (!userId) throw new Error("User not found");
 
