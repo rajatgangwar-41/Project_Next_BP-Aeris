@@ -67,4 +67,4 @@ const SideBar = ({ isCollapsed }: Props) => {
   );
 };
 
-export default SideBar;
+export { SideBar };

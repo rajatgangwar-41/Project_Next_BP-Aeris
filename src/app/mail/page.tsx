@@ -1,5 +1,6 @@
 import React from "react";
 import dynamic from "next/dynamic";
+import { ModeToggle } from "@/components/theme-toggle";
 // import { Mail } from "./mail";
 
 const Mail = dynamic(() => import("./mail").then((mod) => mod.Mail), {
@@ -9,11 +10,16 @@ const Mail = dynamic(() => import("./mail").then((mod) => mod.Mail), {
 
 const MailPage = () => {
   return (
-    <Mail
-      defaultLayout={[20, 32, 48]}
-      defaultCollapsed={false}
-      navCollapsedSize={4}
-    />
+    <>
+      <div className="absolute bottom-4 left-4">
+        <ModeToggle />
+      </div>
+      <Mail
+        defaultLayout={[20, 32, 48]}
+        defaultCollapsed={false}
+        navCollapsedSize={4}
+      />
+    </>
   );
 };
 
