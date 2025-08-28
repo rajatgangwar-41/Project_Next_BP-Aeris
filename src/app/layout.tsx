@@ -6,6 +6,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 
 import { TRPCReactProvider } from "@/trpc/react";
 import { ThemeProvider } from "@/components/theme-provider";
+import KBar from "@/app/mail/kbar";
 
 export const metadata: Metadata = {
   title: "Aeris",
@@ -32,7 +33,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <TRPCReactProvider>{children}</TRPCReactProvider>
+            <TRPCReactProvider>
+              <KBar>{children}</KBar>
+            </TRPCReactProvider>
           </ThemeProvider>
         </body>
       </html>

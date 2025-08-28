@@ -48,6 +48,7 @@ export const mailRouter = createTRPCRouter({
         id: true,
         userId: true,
         emailAddress: true,
+        name: true,
       },
     });
   }),
