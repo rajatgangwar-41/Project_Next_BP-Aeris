@@ -1,21 +1,20 @@
 "use client";
+
 import React from "react";
 import Text from "@tiptap/extension-text";
 import { useLocalStorage } from "usehooks-ts";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
+import { readStreamableValue } from "@ai-sdk/rsc";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 
 import TipTapMenuBar from "./menu-bar";
 import TagInput from "./tag-input";
+import AIComposeButton from "./ai-compose-button";
 import { api } from "@/trpc/react";
-// import { generate } from "./action";
-// import { readStreamableValue } from "ai/rsc";
-// import GhostExtension from "./extension";
-// import { useAutoAnimate } from "@formkit/auto-animate/react";
-// import AIComposeButton from "./ai-compose-button";
+import { generate } from "./action";
 
 type EmailEditorProps = {
   toValues: { label: string; value: string }[];
@@ -45,7 +44,6 @@ const EmailEditor = ({
   onCcChange,
   defaultToolbarExpand,
 }: EmailEditorProps) => {
-  // const [ref] = useAutoAnimate();
   const [accountId] = useLocalStorage("accountId", "");
   const { data: suggestions } = api.mail.getEmailSuggestions.useQuery(
     { accountId: accountId, query: "" },
@@ -57,18 +55,19 @@ const EmailEditor = ({
   const [expanded, setExpanded] = React.useState(defaultToolbarExpand ?? false);
 
   const aiGenerate = async (prompt: string) => {
-    // const { output } = await generate(prompt);
-    // for await (const delta of readStreamableValue(output)) {
-    //   if (delta) {
-    //     setGeneration(delta);
-    //   }
-    // }
+    const { output }: Awaited<ReturnType<typeof generate>> =
+      await generate(prompt);
+    for await (const delta of readStreamableValue(output)) {
+      if (delta) {
+        setGeneration(delta);
+      }
+    }
   };
 
   const customText = Text.extend({
     addKeyboardShortcuts() {
       return {
-        "Meta-j": () => {
+        "Mod-/": () => {
           aiGenerate(this.editor.getText());
           return true;
         },
@@ -161,10 +160,10 @@ const EmailEditor = ({
             <span className="font-medium text-green-600">Draft </span>
             <span>to {to.join(", ")}</span>
           </div>
-          {/* <AIComposeButton
+          <AIComposeButton
             isComposing={defaultToolbarExpand}
             onGenerate={setGeneration}
-          /> */}
+          />
         </div>
       </div>
 
@@ -182,16 +181,16 @@ const EmailEditor = ({
         <span className="text-sm">
           Tip: Press{" "}
           <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800">
-            Cmd + J
+            Ctrl + /
           </kbd>{" "}
           for AI autocomplete
         </span>
         <Button
           onClick={async () => {
             editor?.commands.clearContent();
-            await handleSend(value);
+            handleSend(value);
           }}
-          // isLoading={isSending}
+          disabled={isSending}
         >
           Send
         </Button>

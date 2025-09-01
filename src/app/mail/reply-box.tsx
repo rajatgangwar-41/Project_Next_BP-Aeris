@@ -71,7 +71,7 @@ const Component = ({
     );
   }, [replyDetails, threadId]);
 
-  const handleSend = async (value: string) => {
+  const handleSend = (value: string) => {
     if (!replyDetails) return;
     sendEmail.mutate(
       {
