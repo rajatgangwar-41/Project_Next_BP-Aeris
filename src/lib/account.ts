@@ -4,6 +4,8 @@ import type {
   SyncUpdatedResponse,
 } from "@/lib/types";
 import axios from "axios";
+import { syncEmailsToDatabase } from "./sync-to-db";
+import { db } from "@/server/db";
 
 const API_BASE_URL = "https://api.aurinko.io/v1";
 
@@ -111,6 +113,55 @@ class Account {
         console.error("Error during sync:", error);
       }
     }
+  }
+
+  async syncEmails() {
+    const account = await db.account.findUnique({
+      where: {
+        accessToken: this.token,
+      },
+    });
+
+    if (!account) throw new Error("Invalid token");
+    if (!account.nextDeltaToken) throw new Error("No delta token");
+
+    let response = await this.getUpdatedEmails({
+      deltaToken: account.nextDeltaToken,
+    });
+
+    let allEmails: EmailMessage[] = response.records;
+    let storedDeltaToken = account.nextDeltaToken;
+    
+    if (response.nextDeltaToken) {
+      storedDeltaToken = response.nextDeltaToken;
+    }
+    while (response.nextPageToken) {
+      response = await this.getUpdatedEmails({
+        pageToken: response.nextPageToken,
+      });
+      allEmails = allEmails.concat(response.records);
+      if (response.nextDeltaToken) {
+        storedDeltaToken = response.nextDeltaToken;
+      }
+    }
+
+    if (!response) throw new Error("Failed to sync emails");
+
+    try {
+      await syncEmailsToDatabase(allEmails, account.id);
+    } catch (error) {
+      console.log("error", error);
+    }
+
+    // console.log('syncEmails', response)
+    await db.account.update({
+      where: {
+        id: account.id,
+      },
+      data: {
+        nextDeltaToken: storedDeltaToken,
+      },
+    });
   }
 
   async sendEmail({

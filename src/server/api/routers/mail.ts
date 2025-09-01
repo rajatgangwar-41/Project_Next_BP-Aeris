@@ -93,6 +93,9 @@ export const mailRouter = createTRPCRouter({
         ctx.auth.userId,
       );
 
+      const acc = new Account(account.accessToken);
+      acc.syncEmails().catch(console.error);
+
       let filter: Prisma.ThreadWhereInput = {};
       if (input.tab === "inbox") {
         filter = inboxFilter(account.id);
@@ -260,6 +263,7 @@ export const mailRouter = createTRPCRouter({
       );
       const account = new Account(acc.accessToken);
       console.log("sendmail", input);
+
       await account.sendEmail({
         body: input.body,
         subject: input.subject,
