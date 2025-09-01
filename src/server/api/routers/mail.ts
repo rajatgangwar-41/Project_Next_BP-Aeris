@@ -258,18 +258,31 @@ export const mailRouter = createTRPCRouter({
         input.accountId,
         ctx.auth.userId,
       );
-      // const account = new Account(acc.token);
-      // console.log("sendmail", input);
-      // await account.sendEmail({
-      //   body: input.body,
-      //   subject: input.subject,
-      //   threadId: input.threadId,
-      //   to: input.to,
-      //   bcc: input.bcc,
-      //   cc: input.cc,
-      //   replyTo: input.replyTo,
-      //   from: input.from,
-      //   inReplyTo: input.inReplyTo,
-      // });
+      const account = new Account(acc.accessToken);
+      console.log("sendmail", input);
+      await account.sendEmail({
+        body: input.body,
+        subject: input.subject,
+        threadId: input.threadId,
+        to: input.to,
+        bcc: input.bcc,
+        cc: input.cc,
+        replyTo: input.replyTo,
+        from: input.from,
+        inReplyTo: input.inReplyTo,
+      });
+    }),
+  getMyAccount: protectedProcedure
+    .input(
+      z.object({
+        accountId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const account = await authoriseAccountAccess(
+        input.accountId,
+        ctx.auth.userId,
+      );
+      return account;
     }),
 });
