@@ -2,11 +2,11 @@
 
 import React from "react";
 import { Button } from "./ui/button";
-import { getAurinkoAuth } from "@/lib/aurinko";
+import { getAurinkoAuthorizationUrl } from "@/lib/aurinko";
 
 const LinkAccountButton = () => {
   const handleClick = async () => {
-    const authUrl = await getAurinkoAuth({ serviceType: "Google" });
+    const authUrl = await getAurinkoAuthorizationUrl({ serviceType: "Google" });
     console.log("AuthUrl:", authUrl);
   };
 

@@ -10,14 +10,18 @@ import {
   Priority,
 } from "kbar";
 import RenderResults from "./render-result";
+// import { HomeIcon, MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { useLocalStorage } from "usehooks-ts";
 import { usePathname, useRouter } from "next/navigation";
+// import useAccountSwitching from "./use-account-switching";
 import { useAtom } from "jotai";
 import { useThread } from "@/hooks/use-thread";
 import { useThemeSwitching } from "@/hooks/use-theme-switching";
 import { useAccountSwitching } from "@/hooks/use-account-switching";
+// import { isSearchingAtom } from "../search-bar";
 
 export default function KBar({ children }: { children: React.ReactNode }) {
+  // const [isSearching, setIsSearching] = useAtom(isSearchingAtom);
   const [_, setTab] = useLocalStorage(`aeris-tab`, "inbox");
   const [threadId, setThreadId] = useThread();
   const [done, setDone] = useLocalStorage("aeris-done", false);

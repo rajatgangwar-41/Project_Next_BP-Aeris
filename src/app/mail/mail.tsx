@@ -12,7 +12,9 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AccountSwitcher } from "./account-switcher";
-import SideBar from "./sidebar";
+import { SideBar } from "./sidebar";
+import { ThreadList } from "./thread-list";
+import { ThreadDisplay } from "./thread-display";
 
 interface MailProps {
   defaultLayout: number[] | undefined;
@@ -96,15 +98,16 @@ export function Mail({
               </TabsList>
             </div>
             <Separator />
-            <TabsContent value="inbox" className="m-0"></TabsContent>
+            <TabsContent value="inbox" className="m-0">
+              <ThreadList />
+            </TabsContent>
             <TabsContent value="done" className="m-0"></TabsContent>
           </Tabs>
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <ResizablePanel
-          defaultSize={defaultLayout[2]}
-          minSize={30}
-        ></ResizablePanel>
+        <ResizablePanel defaultSize={defaultLayout[2]} minSize={30}>
+          <ThreadDisplay />
+        </ResizablePanel>
       </ResizablePanelGroup>
     </TooltipProvider>
   );
