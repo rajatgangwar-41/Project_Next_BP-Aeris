@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useLocalStorage } from "usehooks-ts";
 
 import { cn } from "@/lib/utils";
 import {
@@ -15,6 +16,7 @@ import { AccountSwitcher } from "./account-switcher";
 import { SideBar } from "./sidebar";
 import { ThreadList } from "./thread-list";
 import { ThreadDisplay } from "./thread-display";
+import { SearchBar, isSearchingAtom } from "./search-bar";
 
 interface MailProps {
   defaultLayout: number[] | undefined;
@@ -27,6 +29,7 @@ export function Mail({
   defaultCollapsed = false,
   navCollapsedSize,
 }: MailProps) {
+  const [done, setDone] = useLocalStorage("aeris-done", false);
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
 
   return (
@@ -79,7 +82,17 @@ export function Mail({
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
-          <Tabs defaultValue="inbox">
+          <Tabs
+            defaultValue="inbox"
+            value={done ? "done" : "inbox"}
+            onValueChange={(tab) => {
+              if (tab === "done") {
+                setDone(true);
+              } else {
+                setDone(false);
+              }
+            }}
+          >
             <div className="flex items-center px-4 py-1">
               <h1 className="text-xl font-bold">Inbox</h1>
               <TabsList className="ml-auto">
@@ -98,10 +111,13 @@ export function Mail({
               </TabsList>
             </div>
             <Separator />
+            <SearchBar />
             <TabsContent value="inbox" className="m-0">
               <ThreadList />
             </TabsContent>
-            <TabsContent value="done" className="m-0"></TabsContent>
+            <TabsContent value="done" className="m-0">
+              <ThreadList />
+            </TabsContent>
           </Tabs>
         </ResizablePanel>
         <ResizableHandle withHandle />

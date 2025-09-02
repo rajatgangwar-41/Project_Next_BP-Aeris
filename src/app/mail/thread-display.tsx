@@ -35,6 +35,8 @@ import { addDays, addHours, format, nextSaturday } from "date-fns";
 import { useThread } from "@/hooks/use-thread";
 import { useThreads } from "@/hooks/use-threads";
 import EmailDisplay from "./email-display";
+import { isSearchingAtom, searchValueAtom } from "./search-bar";
+import { SearchDisplay } from "./search-display";
 import { useLocalStorage } from "usehooks-ts";
 import ReplyBox from "./reply-box";
 import EmailEditor from "./email-editor";
@@ -46,6 +48,7 @@ export function ThreadDisplay() {
   const { threads, isFetching } = useThreads();
   const today = new Date();
   const _thread = threads?.find((t) => t.id === threadId);
+  const [isSearching, setIsSearching] = useAtom(isSearchingAtom);
 
   const [accountId] = useLocalStorage("accountId", "");
   const thread = _thread;
@@ -188,10 +191,8 @@ export function ThreadDisplay() {
         </DropdownMenu>
       </div>
       <Separator />
-      {/* {isSearching ? ( */}
-      {false ? ( //To delete
-        // <SearchDisplay />
-        <></> //To Delete
+      {isSearching ? (
+        <SearchDisplay />
       ) : (
         <>
           {thread ? (
