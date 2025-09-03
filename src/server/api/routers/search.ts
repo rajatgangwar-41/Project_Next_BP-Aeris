@@ -2,7 +2,6 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { authoriseAccountAccess } from "./mail";
 import { OramaManager } from "@/lib/orama";
-// import { getEmbeddings } from "@/lib/embeddings";
 
 export const searchRouter = createTRPCRouter({
   searchEmails: protectedProcedure

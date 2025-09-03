@@ -3,6 +3,7 @@ import { db } from "@/server/db";
 import { Prisma } from "@prisma/client";
 import { OramaManager } from "./orama";
 import { turndown } from "./turndown";
+import { getEmbeddings } from "./embeddings";
 import type { EmailMessage, EmailAddress, EmailAttachment } from "./types";
 
 async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
@@ -20,7 +21,11 @@ async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
             const body = turndown.turndown(
               email.body ?? email.bodySnippet ?? "",
             );
+
             const payload = `From: ${email.from.name} <${email.from.address}>\nTo: ${email.to.map((t) => `${t.name} <${t.address}>`).join(", ")}\nSubject: ${email.subject}\nBody: ${body}\n SentAt: ${new Date(email.sentAt).toLocaleString()}`;
+
+            const bodyEmbedding = await getEmbeddings(payload);
+
             await oramaClient.insert({
               title: email.subject,
               body: body,
@@ -28,6 +33,7 @@ async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
               from: `${email.from.name} <${email.from.address}>`,
               to: email.to.map((t) => `${t.name} <${t.address}>`),
               sentAt: new Date(email.sentAt).toLocaleString(),
+              embeddings: bodyEmbedding,
               threadId: email.threadId,
             });
           });

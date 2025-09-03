@@ -17,6 +17,7 @@ import { SideBar } from "./sidebar";
 import { ThreadList } from "./thread-list";
 import { ThreadDisplay } from "./thread-display";
 import { SearchBar, isSearchingAtom } from "./search-bar";
+import { AskAI } from "./ask-ai";
 
 interface MailProps {
   defaultLayout: number[] | undefined;
@@ -78,6 +79,7 @@ export function Mail({
             <Separator />
             <SideBar isCollapsed={isCollapsed} />
             <div className="flex-1"></div>
+            <AskAI isCollapsed={isCollapsed} />
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle />
