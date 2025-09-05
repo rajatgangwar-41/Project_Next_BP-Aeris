@@ -17,7 +17,6 @@ const LandingPage = async () => {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            {/* Light mode logo */}
             <Image
               src="/logo-dark.png"
               alt="Aeris Logo"
@@ -25,7 +24,6 @@ const LandingPage = async () => {
               height={50}
               className="block rounded dark:hidden"
             />
-            {/* Dark mode logo */}
             <Image
               src="/logo-light.png"
               alt="Aeris Logo"
@@ -68,8 +66,7 @@ const LandingPage = async () => {
           The minimalistic, <br />
           AI-powered email client.
         </h1>
-        <div className="h-4"></div>
-        <p className="mb-8 max-w-xl text-center text-xl text-gray-600 dark:text-gray-300">
+        <p className="mt-4 mb-8 max-w-xl text-center text-xl text-gray-600 dark:text-gray-300">
           Aeris is a minimalistic, AI-powered email client that empowers you to
           manage your email with ease.
         </p>
@@ -81,9 +78,8 @@ const LandingPage = async () => {
             <Button variant="outline">Learn More</Button>
           </Link>
         </div>
-
         {/* Features */}
-        <div className="mx-auto mt-12 max-w-5xl">
+        <div className="mx-auto mt-16 max-w-5xl">
           <h2 className="mb-4 text-center text-2xl font-semibold">
             Experience the power of:
           </h2>
@@ -114,16 +110,52 @@ const LandingPage = async () => {
             </div>
           </div>
         </div>
-
-        {/* Demo image */}
+        {/* About / Why Aeris */}
+        <section className="mx-auto mt-20 max-w-4xl px-6 text-center">
+          <h2 className="mb-4 text-2xl font-bold">Why Aeris?</h2>
+          <p className="mb-6 text-lg text-gray-600 dark:text-gray-400">
+            Email is broken. We’re drowning in promotions, threads, and clutter.
+            Aeris takes a new approach: a minimalistic, distraction-free inbox
+            powered by AI to help you focus on what truly matters.
+          </p>
+          <p className="text-lg text-gray-600 dark:text-gray-400">
+            With blazing-fast search, intelligent prioritization, and a
+            keyboard-first interface, Aeris is built for productivity lovers who
+            want to reclaim control over their email.
+          </p>
+        </section>
+        {/* Demo image */}{" "}
         <Image
           src="/demo.png"
           alt="demo"
           width={1000}
           height={1000}
-          className="my-12 h-auto w-[70vw] rounded-md border shadow-xl transition-all hover:scale-[102%] hover:shadow-2xl"
+          className="mt-20 h-auto w-[70vw] rounded-md border shadow-xl transition-all hover:scale-[102%] hover:shadow-2xl"
         />
       </div>
+
+      {/* Footer */}
+      <footer className="mt-20 border-t bg-white/70 py-10 dark:bg-black/20">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-6 md:flex-row">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            © {new Date().getFullYear()} Aeris. All rights reserved.
+          </p>
+          <div className="flex space-x-6 text-sm text-gray-600 dark:text-gray-400">
+            <Link href="" className="hover:underline">
+              About
+            </Link>
+            <Link href="" className="hover:underline">
+              Privacy
+            </Link>
+            <Link href="" className="hover:underline">
+              Terms
+            </Link>
+            <Link href="" className="hover:underline">
+              Contact
+            </Link>
+          </div>
+        </div>
+      </footer>
     </>
   );
 };
