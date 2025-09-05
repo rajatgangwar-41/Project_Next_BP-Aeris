@@ -1,10 +1,9 @@
 "use client";
 
-import Avatar from "react-avatar";
-import { Letter } from "react-letter";
-import { api, type RouterOutputs } from "@/trpc/react";
 import React from "react";
-import { useLocalStorage } from "usehooks-ts";
+import Avatar from "react-avatar";
+import { type RouterOutputs } from "@/trpc/react";
+import { Letter } from "react-letter";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { useThreads } from "@/hooks/use-threads";

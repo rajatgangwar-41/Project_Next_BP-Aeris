@@ -9,11 +9,11 @@ import { useThreads } from "@/hooks/use-threads";
 import { useThread } from "@/hooks/use-thread";
 
 export function ThreadList() {
-  const { threads, isFetching } = useThreads();
+  const { threads } = useThreads();
   const [threadId, setThreadId] = useThread();
 
   const groupedThreads = threads?.reduce(
-    (acc, thread) => {
+    (acc: any, thread: any) => {
       const date = format(thread.lastMessageDate ?? new Date(), "yyyy-MM-dd");
       if (!acc[date]) {
         acc[date] = [];
@@ -25,14 +25,14 @@ export function ThreadList() {
   );
 
   return (
-    <div className="max-h-[calc(100vh-120px)] max-w-full overflow-y-scroll">
+    <div className="max-h-[calc(100vh-140px)] max-w-full overflow-y-scroll">
       <div className="flex flex-col gap-2 p-4 pt-0">
         {Object.entries(groupedThreads ?? {}).map(([date, threads]) => (
           <React.Fragment key={date}>
             <div className="text-muted-foreground mt-4 text-xs font-medium first:mt-0">
               {format(new Date(date), "MMMM d, yyyy")}
             </div>
-            {threads.map((item) => (
+            {threads?.map((item: any) => (
               <button
                 id={`thread-${item.id}`}
                 key={item.id}
@@ -91,7 +91,7 @@ export function ThreadList() {
                 ></div>
                 {item.emails[0]?.sysLabels.length ? (
                   <div className="flex items-center gap-2">
-                    {item.emails.at(0)?.sysLabels.map((label) => (
+                    {item.emails.at(0)?.sysLabels.map((label: any) => (
                       <Badge
                         key={label}
                         variant={getBadgeVariantFromLabel(label)}

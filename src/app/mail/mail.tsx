@@ -16,7 +16,7 @@ import { AccountSwitcher } from "./account-switcher";
 import { SideBar } from "./sidebar";
 import { ThreadList } from "./thread-list";
 import { ThreadDisplay } from "./thread-display";
-import { SearchBar, isSearchingAtom } from "./search-bar";
+import { SearchBar } from "./search-bar";
 import { AskAI } from "./ask-ai";
 
 interface MailProps {

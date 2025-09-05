@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { api, type RouterOutputs } from "@/trpc/react";
+import { api } from "@/trpc/react";
 import { useLocalStorage } from "usehooks-ts";
 import { Plus } from "lucide-react";
 import { getAurinkoAuthorizationUrl } from "@/lib/aurinko";

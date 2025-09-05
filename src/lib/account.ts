@@ -131,7 +131,7 @@ class Account {
 
     let allEmails: EmailMessage[] = response.records;
     let storedDeltaToken = account.nextDeltaToken;
-    
+
     if (response.nextDeltaToken) {
       storedDeltaToken = response.nextDeltaToken;
     }

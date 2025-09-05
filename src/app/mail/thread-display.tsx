@@ -43,14 +43,21 @@ import ReplyBox from "./reply-box";
 type EmailProp = RouterOutputs["mail"]["getThreads"][number]["emails"][number];
 
 export function ThreadDisplay() {
-  const [threadId, setThreadId] = useThread();
-  const { threads, isFetching } = useThreads();
+  const [threadId] = useThread();
+  const { threads } = useThreads();
   const today = new Date();
   const _thread = threads?.find((t) => t.id === threadId);
-  const [isSearching, setIsSearching] = useAtom(isSearchingAtom);
+  const [isSearching] = useAtom(isSearchingAtom);
 
   const [accountId] = useLocalStorage("accountId", "");
-  const thread = _thread;
+  const { data: foundThread } = api.mail.getThreadById.useQuery(
+    {
+      accountId: accountId,
+      threadId: threadId ?? "",
+    },
+    { enabled: !!!_thread && !!threadId },
+  );
+  const thread = _thread ?? foundThread;
 
   return (
     <div className="flex h-full flex-col">

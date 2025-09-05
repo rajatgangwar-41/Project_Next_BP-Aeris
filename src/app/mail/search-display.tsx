@@ -12,11 +12,12 @@ import { isSearchingAtom, searchValueAtom } from "./search-bar";
 import { useThread } from "@/hooks/use-thread";
 
 const SearchDisplay = () => {
-  const [searchValue, setSearchValue] = useAtom(searchValueAtom);
-  const [isSearching, setIsSearching] = useAtom(isSearchingAtom);
-  const [_, setThreadId] = useThread();
+  const [searchValue] = useAtom(searchValueAtom);
+  const [_, setIsSearching] = useAtom(isSearchingAtom);
+  const [__, setThreadId] = useThread();
+
+  const [accountId] = useLocalStorage("accountId", "");
   const [debouncedSearch] = useDebounceValue(searchValue, 500);
-  const [accountId, setAccountId] = useLocalStorage("accountId", "");
 
   const search = api.search.searchEmails.useMutation();
 

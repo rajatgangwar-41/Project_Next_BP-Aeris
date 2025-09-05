@@ -55,6 +55,7 @@ export const mailRouter = createTRPCRouter({
       },
     });
   }),
+
   getNumThreads: protectedProcedure
     .input(
       z.object({
@@ -80,6 +81,7 @@ export const mailRouter = createTRPCRouter({
         where: filter,
       });
     }),
+
   getThreads: protectedProcedure
     .input(
       z.object({
@@ -136,6 +138,41 @@ export const mailRouter = createTRPCRouter({
       });
       return threads;
     }),
+
+  getThreadById: protectedProcedure
+    .input(
+      z.object({
+        accountId: z.string(),
+        threadId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const account = await authoriseAccountAccess(
+        input.accountId,
+        ctx.auth.userId,
+      );
+      return await ctx.db.thread.findUnique({
+        where: { id: input.threadId },
+        include: {
+          emails: {
+            orderBy: {
+              sentAt: "asc",
+            },
+            select: {
+              from: true,
+              body: true,
+              subject: true,
+              bodySnippet: true,
+              emailLabel: true,
+              sysLabels: true,
+              id: true,
+              sentAt: true,
+            },
+          },
+        },
+      });
+    }),
+
   getEmailSuggestions: protectedProcedure
     .input(
       z.object({

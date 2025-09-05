@@ -6,8 +6,9 @@ export const useThreads = () => {
   const { data: accounts } = api.mail.getAccounts.useQuery();
 
   const [accountId] = useLocalStorage("accountId", "");
-  const [tab] = useLocalStorage("normalhuman-tab", "inbox");
-  const [done] = useLocalStorage("normalhuman-done", false);
+  const [tab] = useLocalStorage("aeris-tab", "inbox");
+  const [done] = useLocalStorage("aeris-done", false);
+
   const queryKey = getQueryKey(
     api.mail.getThreads,
     { accountId, tab, done },

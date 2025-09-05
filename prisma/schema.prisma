@@ -150,7 +150,7 @@ enum EmailLabel {
 model EmailAddress {
     id            String  @id @default(cuid())
     name          String?
-    address       String  
+    address       String
     raw           String?
     sentEmails    Email[] @relation("FromEmail")
     receivedTo    Email[] @relation("ToEmails")
