@@ -2,18 +2,25 @@ import React, { type ComponentProps } from "react";
 import DOMPurify from "dompurify";
 import { motion } from "framer-motion";
 import { formatDistanceToNow, format } from "date-fns";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { useThreads } from "@/hooks/use-threads";
 import { useThread } from "@/hooks/use-thread";
+import type { RouterOutputs } from "@/trpc/react";
 
 export function ThreadList() {
   const { threads } = useThreads();
   const [threadId, setThreadId] = useThread();
 
+  const [parent] = useAutoAnimate();
+
   const groupedThreads = threads?.reduce(
-    (acc: any, thread: any) => {
+    (
+      acc: Record<string, any[]>,
+      thread: RouterOutputs["mail"]["getThreads"][number],
+    ) => {
       const date = format(thread.lastMessageDate ?? new Date(), "yyyy-MM-dd");
       if (!acc[date]) {
         acc[date] = [];
@@ -26,7 +33,7 @@ export function ThreadList() {
 
   return (
     <div className="max-h-[calc(100vh-140px)] max-w-full overflow-y-scroll">
-      <div className="flex flex-col gap-2 p-4 pt-0">
+      <div ref={parent} className="flex flex-col gap-2 p-4 pt-0">
         {Object.entries(groupedThreads ?? {}).map(([date, threads]) => (
           <React.Fragment key={date}>
             <div className="text-muted-foreground mt-4 text-xs font-medium first:mt-0">

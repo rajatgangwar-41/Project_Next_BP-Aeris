@@ -22,7 +22,6 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json({ error: "ACCOUNT_NOT_FOUND" }, { status: 404 });
 
   const account = new Account(dbAccount.accessToken);
-  // await account.createSubscription();
   const response = await account.performInitialSync();
   if (!response)
     return NextResponse.json({ error: "FAILED_TO_SYNC" }, { status: 500 });
