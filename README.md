@@ -1,4 +1,4 @@
-![Full Stack AI Powered E-mail Client](https://rajatgangwar-aeris.vercel.app/public/demo.png)
+![Full Stack AI Powered E-mail Client](https://rajatgangwar-aeris.vercel.app/demo.png)
 
 # Overview
 
