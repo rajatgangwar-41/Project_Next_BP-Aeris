@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 import { OramaManager } from "@/lib/orama";
 import { db } from "@/server/db";
 import { auth } from "@clerk/nextjs/server";
+import { getSubscriptionStatus } from "@/lib/stripe-actions";
+import { FREE_CREDITS_PER_DAY } from "@/constants/stripe";
 
 // export const runtime = "edge";
 
@@ -16,7 +18,31 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { messages, accountId } = await req.json();
+    const isSubscribed = await getSubscriptionStatus();
+    if (!isSubscribed) {
+      const chatbotInteraction = await db.chatbotInteraction.findUnique({
+        where: {
+          day: new Date().toDateString(),
+          userId,
+        },
+      });
+      if (!chatbotInteraction) {
+        await db.chatbotInteraction.create({
+          data: {
+            day: new Date().toDateString(),
+            count: 1,
+            userId,
+          },
+        });
+      } else if (chatbotInteraction.count >= FREE_CREDITS_PER_DAY) {
+        return NextResponse.json({ error: "Limit reached" }, { status: 429 });
+      }
+    }
+
+    const {
+      messages,
+      accountId,
+    }: { messages: UIMessage[]; accountId: string } = await req.json();
     const oramaManager = new OramaManager(accountId);
     await oramaManager.initialize();
 
@@ -51,8 +77,26 @@ export async function POST(req: Request) {
       model: google("gemini-2.5-flash"),
       system: prompt,
       messages: convertToModelMessages(messages),
-      onFinish({ text, finishReason, usage, response, steps, totalUsage }) {
+      async onFinish({
+        text,
+        finishReason,
+        usage,
+        response,
+        steps,
+        totalUsage,
+      }) {
         const today = new Date().toDateString();
+        await db.chatbotInteraction.update({
+          where: {
+            userId,
+            day: today,
+          },
+          data: {
+            count: {
+              increment: 1,
+            },
+          },
+        });
       },
     });
 

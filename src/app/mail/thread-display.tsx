@@ -35,11 +35,10 @@ import { addDays, addHours, format, nextSaturday } from "date-fns";
 import { useThread } from "@/hooks/use-thread";
 import { useThreads } from "@/hooks/use-threads";
 import EmailDisplay from "./email-display";
-import { isSearchingAtom, searchValueAtom } from "./search-bar";
+import { isSearchingAtom } from "./search-bar";
 import { SearchDisplay } from "./search-display";
 import { useLocalStorage } from "usehooks-ts";
 import ReplyBox from "./reply-box";
-import EmailEditor from "./email-editor";
 
 type EmailProp = RouterOutputs["mail"]["getThreads"][number]["emails"][number];
 

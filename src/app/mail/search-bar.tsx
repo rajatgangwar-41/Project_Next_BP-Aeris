@@ -22,6 +22,8 @@ const SearchBar = () => {
   };
   // add escape key to close
   React.useEffect(() => {
+    if (typeof window === "undefined") return;
+
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         handleBlur();
@@ -39,7 +41,7 @@ const SearchBar = () => {
     };
     window.addEventListener("keydown", handleEscape);
     return () => window.removeEventListener("keydown", handleEscape);
-  }, [setIsSearching, searchValue, isSearching, document.activeElement]);
+  }, [setIsSearching, searchValue, isSearching]);
 
   return (
     <div className="bg-background/95 supports-[backdrop-filter]:bg-background/60 p-4 backdrop-blur">

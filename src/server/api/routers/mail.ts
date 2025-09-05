@@ -4,6 +4,7 @@ import { db } from "@/server/db";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { emailAddressSchema } from "@/lib/types";
 import Account from "@/lib/account";
+import { FREE_CREDITS_PER_DAY } from "@/constants/stripe";
 
 export const authoriseAccountAccess = async (
   accountId: string,
@@ -289,4 +290,18 @@ export const mailRouter = createTRPCRouter({
       );
       return account;
     }),
+  getChatbotInteraction: protectedProcedure.query(async ({ ctx }) => {
+    const chatbotInteraction = await ctx.db.chatbotInteraction.findUnique({
+      where: {
+        day: new Date().toDateString(),
+        userId: ctx.auth.userId,
+      },
+      select: { count: true },
+    });
+    const remainingCredits =
+      FREE_CREDITS_PER_DAY - (chatbotInteraction?.count || 0);
+    return {
+      remainingCredits,
+    };
+  }),
 });

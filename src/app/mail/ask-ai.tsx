@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import ReactMarkdown from "react-markdown";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,12 +9,14 @@ import { toast } from "sonner";
 import { Send, SparklesIcon } from "lucide-react";
 import { useLocalStorage } from "usehooks-ts";
 import { cn } from "@/lib/utils";
-import ReactMarkdown from "react-markdown";
+import PremiumBanner from "./premium-banner";
+import { api } from "@/trpc/react";
 
 const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
   const [input, setInput] = React.useState("");
   const [accountId] = useLocalStorage("accountId", "");
-  const { messages, sendMessage, status } = useChat({
+  const utils = api.useUtils();
+  const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
       api: "/api/chat",
       body: {
@@ -26,6 +29,9 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
           "You have reached the limit for today. Please upgrade to pro to ask as many questions as you want",
         );
       }
+    },
+    onFinish: () => {
+      utils.mail.getChatbotInteraction.refetch();
     },
     messages: [],
   });
@@ -49,17 +55,18 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
   if (isCollapsed) return null;
 
   const lastMessage = messages[messages.length - 1];
+  const isAssistantStreaming = lastMessage?.role === "user" && !error;
 
   return (
     <div className="mb-14 p-4">
-      {/* <PremiumBanner /> */}
+      <PremiumBanner />
       <div className="h-4"></div>
       <motion.div className="flex flex-1 flex-col items-end justify-end rounded-lg border bg-gray-100 p-4 pb-4 shadow-inner dark:bg-gray-900">
         <div
           className="flex max-h-[50vh] w-full flex-col gap-2 overflow-y-scroll"
           id="message-container"
         >
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="sync">
             {messages.map((message, idx) => (
               <motion.div
                 key={message.id}
@@ -132,7 +139,7 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
               </motion.div>
             ))}
             {/* Loader for assistant typing */}
-            {lastMessage?.role === "user" && (
+            {isAssistantStreaming && (
               <motion.div
                 layout="position"
                 className={cn(
